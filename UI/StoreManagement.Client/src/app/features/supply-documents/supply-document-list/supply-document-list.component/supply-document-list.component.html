@@ -1,0 +1,112 @@
+<div class="page-header">
+    <div>
+        <h1>Supply Documents</h1>
+        <p class="page-subtitle">
+            @if (auth.isManager()) {
+                Requests raised by employees, ready for your review.
+            }@else {
+                Your own supply requests and their status.
+            }
+        </p>
+    </div>
+    @if (auth.isEmployee()) {
+        <a routerLink="/supply-documents/add" class="btn btn-accent">New request</a>
+    }
+</div>
+
+@if (errorMessage()) {
+    <div class="banner banner-error" role="alert"> {{ errorMessage() }} </div>
+}
+
+@if (loading()) {
+    <p>Loading supply documents...</p>
+} @else if (documents().length === 0) {
+    <div class="card empty-state">
+        <h3>Nothing here yet</h3>
+        <p>
+            @if (auth.isEmployee()) {
+              Raise a request when you need items pulled from a warehouse.
+            } @else {
+                No supply requests have been submitted yet.
+            }
+        </p>
+        @if (auth.isEmployee()) {
+            <a routerLink="/supply-documents/add" class="btn btn-accent">New request</a>
+        }
+    </div>
+}@else {
+    <div class="card table-card">
+        <table class="ledger">
+            <thead>
+                <tr>
+                    <th>Document</th>
+                    <th>Subject</th>
+                    <th>Warehouse</th>
+                    <th>Item</th>
+                    @if (auth.isManager()) {
+                        <th>Requested by</th>
+                    }
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (doc of documents(); track doc.supplyDocumentId) {
+                    <tr>
+                        <td class="cell-strong mono"> {{ doc.supplyDocumentName}} </td>
+                        <td>{{ doc.supplyDocumentSubject }}</td>
+                        <td class="cell-muted">{{ doc.warehouseName }}</td>
+                        <td class="cell-muted">{{ doc.itemName }}</td>
+                        @if (auth.isManager()) {
+                            <td class="cell-muted"> {{ doc.createdByName }}</td>
+                        }
+                         <td class="mono cell-muted">{{ doc.createdDate | date: 'mediumDate' }}</td>
+                        <td>
+                            <span
+                                class="stamp"
+                                [class.stamp-pending]="doc.status === 'Pending'"
+                                [class.stamp-approved]="doc.status === 'Approved'"
+                                [class.stamp-declined]="doc.status === 'Declined'"
+                            >
+                                {{ doc.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="row-actions">
+                                @if (auth.isEmployee() && doc.status === 'Pending') {
+                                    <button
+                                        type="button"
+                                        class="btn btn-danger btn-sm"
+                                        (click)="deleteDocument(doc)"
+                                        [disabled]="busyId() === doc.supplyDocumentId"
+                                    >
+                                        {{ busyId() === doc.supplyDocumentId ? 'Deleting…' : 'Delete' }}
+                                     </button>
+                                }
+                                @if (auth.isManager() && doc.status === 'Pending') {
+                                    <button
+                                        type="button"
+                                        class="btn btn-success btn-sm"
+                                        (click)="approve(doc)"
+                                        [disabled]="busyId() === doc.supplyDocumentId"
+                                    >
+                                        Approve
+                                    </button>
+                                    <button
+                                    type="button"
+                                    class="btn btn-danger btn-sm"
+                                    (click)="decline(doc)"
+                                    [disabled]="busyId() === doc.supplyDocumentId"
+                                    >
+                                        Decline
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

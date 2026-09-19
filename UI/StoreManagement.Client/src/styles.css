@@ -1,0 +1,459 @@
+/* ---------------------------------------------------------------------------
+   Store Management - design tokens
+   Visual identity: a warehouse requisition ledger. Crate-stencil display type,
+   a canvas/kraft background, and status badges styled like ink stamps on a
+   packing slip - because that's what this app actually is: paperwork for
+   moving things in and out of a warehouse.
+--------------------------------------------------------------------------- */
+
+:root {
+  /* Color */
+  --ink-navy: #1b2a38;
+  --canvas: #f3f0e7;
+  --canvas-raised: #fbf9f3;
+  --manifest-amber: #c97a3b;
+  --manifest-amber-dark: #a8632c;
+  --ledger-green: #3f6b4f;
+  --requisition-red: #a8402f;
+  --slate: #6b7280;
+  --slate-light: #d8d3c4;
+  --border: #ddd6c4;
+
+  /* Type */
+  --font-display: 'Zilla Slab', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+  /* Layout */
+  --radius: 4px;
+  --shadow-card: 0 1px 2px rgba(27, 42, 56, 0.06), 0 1px 8px rgba(27, 42, 56, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink-navy);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0 0 0.4em;
+  letter-spacing: -0.01em;
+  color: var(--ink-navy);
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: var(--manifest-amber-dark);
+}
+
+code, .mono {
+  font-family: var(--font-mono);
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Visible keyboard focus, everywhere. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--manifest-amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Shared component classes (kept global so feature components can use them
+   without repeating boilerplate CSS everywhere).
+--------------------------------------------------------------------------- */
+
+.card {
+  background: var(--canvas-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.55em 1.1em;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.05s ease;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--ink-navy);
+  color: var(--canvas-raised);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #24384a;
+}
+
+.btn-accent {
+  background: var(--manifest-amber);
+  color: var(--canvas-raised);
+}
+
+.btn-accent:hover:not(:disabled) {
+  background: var(--manifest-amber-dark);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--ink-navy);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--slate);
+  background: rgba(27, 42, 56, 0.04);
+}
+
+.btn-danger {
+  background: transparent;
+  border-color: var(--requisition-red);
+  color: var(--requisition-red);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--requisition-red);
+  color: var(--canvas-raised);
+}
+
+.btn-success {
+  background: transparent;
+  border-color: var(--ledger-green);
+  color: var(--ledger-green);
+}
+
+.btn-success:hover:not(:disabled) {
+  background: var(--ledger-green);
+  color: var(--canvas-raised);
+}
+
+.btn-sm {
+  padding: 0.35em 0.75em;
+  font-size: 0.8rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  margin-bottom: 1.1em;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.field input,
+.field select,
+.field textarea {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 0.6em 0.75em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--ink-navy);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--manifest-amber);
+}
+
+.field-error {
+  color: var(--requisition-red);
+  font-size: 0.8rem;
+}
+
+.field input.invalid,
+.field select.invalid {
+  border-color: var(--requisition-red);
+}
+
+.banner {
+  padding: 0.75em 1em;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  margin-bottom: 1.2em;
+  border: 1px solid transparent;
+}
+
+.banner-error {
+  background: #fbeae7;
+  border-color: rgba(168, 64, 47, 0.35);
+  color: var(--requisition-red);
+}
+
+.banner-success {
+  background: #ecf3ee;
+  border-color: rgba(63, 107, 79, 0.35);
+  color: var(--ledger-green);
+}
+
+/* Ink-stamp style status badge - the app's one signature flourish. */
+.stamp {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25em 0.7em;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  transform: rotate(-2deg);
+}
+
+.stamp-pending {
+  color: var(--slate);
+}
+
+.stamp-approved {
+  color: var(--ledger-green);
+}
+
+.stamp-declined {
+  color: var(--requisition-red);
+}
+
+table.ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+table.ledger th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--slate);
+  font-weight: 600;
+  padding: 0.6em 0.9em;
+  border-bottom: 2px solid var(--ink-navy);
+}
+
+table.ledger td {
+  padding: 0.75em 0.9em;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+table.ledger tbody tr:hover {
+  background: rgba(201, 122, 59, 0.06);
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.4em;
+  justify-content: flex-end;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3em 1.5em;
+  color: var(--slate);
+}
+
+.empty-state h3 {
+  color: var(--ink-navy);
+}
+
+/* Shared list-page layout (warehouses, supply documents) */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.page-subtitle {
+  color: var(--slate);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.page-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.table-card {
+  overflow-x: auto;
+  padding: 0.25rem;
+}
+
+.cell-strong {
+  font-weight: 600;
+}
+
+.cell-muted {
+  color: var(--slate);
+}
+
+.items-row td {
+  background: rgba(27, 42, 56, 0.02);
+  padding: 0.9em 1.2em 1.1em 2.4em;
+}
+
+.items-table {
+  font-size: 0.85rem;
+}
+
+.items-table th {
+  border-bottom-width: 1px;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.filter-bar select {
+  font-family: var(--font-body);
+  padding: 0.5em 0.75em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--ink-navy);
+  font-size: 0.88rem;
+}
+
+/* Shared "Add" form pages (Add Warehouse, Add Supply Document) */
+.form-card {
+  max-width: 640px;
+  padding: 1.75rem 1.75rem 1.5rem;
+}
+
+.form-card textarea {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 0.6em 0.75em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--ink-navy);
+  resize: vertical;
+}
+
+.items-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.items-section-header h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.item-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr auto;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.9rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: rgba(27, 42, 56, 0.015);
+}
+
+.item-row .field {
+  margin-bottom: 0;
+}
+
+.remove-item {
+  margin-top: 1.55rem;
+  color: var(--requisition-red);
+  border-color: transparent;
+}
+
+.remove-item:hover:not(:disabled) {
+  background: var(--requisition-red);
+  color: var(--canvas-raised);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .item-row {
+    grid-template-columns: 1fr;
+  }
+  .remove-item {
+    margin-top: 0;
+    justify-self: flex-start;
+  }
+}

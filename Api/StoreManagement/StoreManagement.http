@@ -1,0 +1,17 @@
+@StoreManagement_HostAddress = http://localhost:5020
+
+### Sign in as a seeded manager
+POST {{StoreManagement_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "userName": "manager1",
+  "password": "<your SeedUsers password>"
+}
+
+### List warehouses (replace the token first)
+GET {{StoreManagement_HostAddress}}/api/warehouses
+Accept: application/json
+Authorization: Bearer <token>
+
+###

@@ -1,0 +1,126 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+}
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--ink-navy);
+  color: var(--canvas-raised);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.25rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-bottom: 2rem;
+}
+
+.crate-tag {
+  background: var(--manifest-amber);
+  color: var(--ink-navy);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0.3em 0.5em;
+  border-radius: 3px;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.nav-link {
+  color: rgba(251, 249, 243, 0.72);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 0.6em 0.75em;
+  border-radius: var(--radius);
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.nav-link:hover {
+  background: rgba(251, 249, 243, 0.08);
+  color: var(--canvas-raised);
+}
+
+.nav-link.active {
+  background: rgba(201, 122, 59, 0.18);
+  color: var(--canvas-raised);
+  font-weight: 600;
+}
+
+.user-card {
+  border-top: 1px solid rgba(251, 249, 243, 0.14);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  align-items: flex-start;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.user-card .stamp {
+  color: var(--manifest-amber);
+}
+
+.sign-out {
+  color: rgba(251, 249, 243, 0.75);
+  border-color: rgba(251, 249, 243, 0.25);
+  margin-top: 0.3em;
+}
+
+.sign-out:hover {
+  color: var(--ink-navy);
+  background: var(--canvas-raised);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 2.5rem;
+}
+
+@media (max-width: 720px) {
+  .shell {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .nav {
+    flex-direction: row;
+  }
+  .user-card {
+    border-top: none;
+    padding-top: 0;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+  }
+  .content {
+    padding: 1.25rem;
+  }
+}

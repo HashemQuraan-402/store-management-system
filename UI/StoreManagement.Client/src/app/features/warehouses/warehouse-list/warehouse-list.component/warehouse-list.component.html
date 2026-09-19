@@ -1,0 +1,101 @@
+<div class="page-header">
+  <div>
+    <h1>Warehouses</h1>
+    <p class="page-subtitle">Every warehouse you've registered, and what's stocked inside each one.</p>
+  </div>
+  <div class="page-actions">
+    <button type="button" class="btn btn-ghost" (click)="export()" [disabled]="exporting() || warehouses().length === 0">
+      {{ exporting() ? 'Exporting…' : 'Export to Excel' }}
+    </button>
+    <a routerLink="/warehouses/add" class="btn btn-accent">Add warehouse</a>
+  </div>
+</div>
+
+@if (errorMessage()) {
+  <div class="banner banner-error" role="alert">{{ errorMessage() }}</div>
+}
+@if (deleteError()) {
+  <div class="banner banner-error" role="alert">{{ deleteError() }}</div>
+}
+
+@if (loading()) {
+  <p>Loading warehouses…</p>
+} @else if (warehouses().length === 0) {
+  <div class="card empty-state">
+    <h3>No warehouses yet</h3>
+    <p>Add your first warehouse to start tracking items and fulfilling supply requests.</p>
+    <a routerLink="/warehouses/add" class="btn btn-accent">Add warehouse</a>
+  </div>
+} @else {
+  <div class="card table-card">
+    <table class="ledger">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Created</th>
+          <th>Items</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (warehouse of warehouses(); track warehouse.warehouseId) {
+          <tr>
+            <td class="cell-strong">{{ warehouse.warehouseName }}</td>
+            <td class="cell-muted">{{ warehouse.warehouseDescription }}</td>
+            <td class="mono cell-muted">{{ warehouse.createdDateAndTime| date: 'mediumDate' }}</td>
+            <td class="mono">{{ warehouse.itemsCount }}</td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="btn btn-ghost btn-sm" (click)="toggleView(warehouse)">
+                  {{ expandedId() === warehouse.warehouseId ? 'Hide' : 'View' }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm"
+                  (click)="deleteWarehouse(warehouse)"
+                  [disabled]="deletingId() === warehouse.warehouseId"
+                >
+                  {{ deletingId() === warehouse.warehouseId ? 'Deleting…' : 'Delete' }}
+                </button>
+              </div>
+            </td>
+          </tr>
+          @if (expandedId() === warehouse.warehouseId) {
+            <tr class="items-row">
+              <td colspan="5">
+                @if (itemsLoading() === warehouse.warehouseId) {
+                  <p class="cell-muted">Loading items…</p>
+                } @else {
+                  @let items = itemsByWarehouse()[warehouse.warehouseId] ?? [];
+                  @if (items.length === 0) {
+                    <p class="cell-muted">No items in this warehouse.</p>
+                  } @else {
+                    <table class="ledger items-table">
+                      <thead>
+                        <tr>
+                          <th>Item</th>
+                          <th>Description</th>
+                          <th>Quantity</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (item of items; track item.itemId) {
+                          <tr>
+                            <td>{{ item.itemName }}</td>
+                            <td class="cell-muted">{{ item.itemDescription || '—' }}</td>
+                            <td class="mono">{{ item.quantity }}</td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  }
+                }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+}

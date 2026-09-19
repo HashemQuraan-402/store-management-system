@@ -1,0 +1,27 @@
+<div class="shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="crate-tag">SM</span>
+            <span class="brand-name">Store Management</span>
+        </div>
+
+        <nav class="nav">
+            @if (auth.isManager()) {
+                <a routerLink="/warehouses" routerLinkActive="active" class="nav-link">Warehouses</a>
+            }
+            <a routerLink="/supply-documents" routerLinkActive="active" class="nav-link">Supply Documents</a>
+        </nav>
+
+        <div class="user-card">
+            <div class="user-name"> {{ auth.fullName() }}</div>
+            <div class="stamp" [class.stamp-approved]="auth.isManager()" [class.stamp-pending]="!auth.isManager()">
+                {{ auth.userType() }}
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm sign-out" (click)="logout()">Sign out</button>
+        </div>
+    </aside>
+
+    <main class="content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

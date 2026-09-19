@@ -1,0 +1,91 @@
+<div class="page-header">
+    <div>
+        <h1>New supply request</h1>
+        <p class="page-subtitle">Pick a warehouse, then the item you need from it.</p>
+    </div>
+    <a routerLink="/supply-documents" class="btn btn-ghost">Cancel</a>
+</div>
+
+@if (errorMessage()) {
+    <div class="banner banner-error" role="alert"> {{ errorMessage() }} </div>
+}
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate class="card form-card">
+    <div class="field">
+        <label for="supplyDocumentName">Document name</label>
+        <input
+        id="supplyDocumentName"
+        type="text"
+        formControlName="supplyDocumentName"
+        placeholder="e.g. SD-2026-005"
+        [class.invalid]="form.controls.supplyDocumentName.invalid && form.controls.supplyDocumentName.touched">
+        @if (form.controls.supplyDocumentName.invalid && form.controls.supplyDocumentName.touched) {
+            <span class="field-error">Document name is required.</span>
+        }
+    </div>
+
+    <div class="field">
+        <label for="supplyDocumentSubject">Subject</label>
+        <input
+        id="supplyDocumentSubject"
+        type="text"
+        formControlName="supplyDocumentSubject"
+        placeholder="What is this request for?"
+        [class.invalid]="form.controls.supplyDocumentSubject.invalid && form.controls.supplyDocumentSubject.touched">
+        @if (form.controls.supplyDocumentSubject.invalid && form.controls.supplyDocumentSubject.touched) {
+            <span class="field-error">Subject is required.</span>
+        }
+    </div>
+
+     <div class="field">
+    <label for="warehouseId">Warehouse</label>
+    <select
+      id="warehouseId"
+      formControlName="warehouseId"
+      [class.invalid]="form.controls.warehouseId.invalid && form.controls.warehouseId.touched"
+    >
+      <option [ngValue]="null" disabled>
+        {{ loadingWarehouses() ? 'Loading warehouses…' : 'Select a warehouse' }}
+      </option>
+      @for (warehouse of warehouses(); track warehouse.id) {
+        <option [ngValue]="warehouse.id">{{ warehouse.name }}</option>
+      }
+    </select>
+    @if (form.controls.warehouseId.invalid && form.controls.warehouseId.touched) {
+      <span class="field-error">Choose a warehouse.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label for="itemId">Item</label>
+    <select
+      id="itemId"
+      formControlName="itemId"
+      [class.invalid]="form.controls.itemId.invalid && form.controls.itemId.touched"
+    >
+      <option [ngValue]="null" disabled>
+        @if (!form.controls.warehouseId.value) {
+          Select a warehouse first
+        } @else if (loadingItems()) {
+          Loading items…
+        } @else if (items().length === 0) {
+          No items in this warehouse
+        } @else {
+          Select an item
+        }
+      </option>
+      @for (item of items(); track item.id) {
+        <option [ngValue]="item.id">{{ item.name }}</option>
+      }
+    </select>
+    @if (form.controls.itemId.invalid && form.controls.itemId.touched) {
+      <span class="field-error">Choose an item.</span>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-accent" [disabled]="submitting()">
+      {{ submitting() ? 'Submitting…' : 'Submit request' }}
+    </button>
+  </div>
+</form>

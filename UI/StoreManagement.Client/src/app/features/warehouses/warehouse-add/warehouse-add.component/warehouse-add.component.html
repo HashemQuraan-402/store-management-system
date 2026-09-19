@@ -1,0 +1,83 @@
+<div class="page-header">
+  <div>
+    <h1>Add warehouse</h1>
+    <p class="page-subtitle">Register a warehouse and list what's stocked inside it.</p>
+  </div>
+  <a routerLink="/warehouses" class="btn btn-ghost">Cancel</a>
+</div>
+
+@if (errorMessage()) {
+  <div class="banner banner-error" role="alert">{{ errorMessage() }}</div>
+}
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate class="card form-card">
+  <div class="field">
+    <label for="warehouseName">Warehouse name</label>
+    <input
+      id="warehouseName"
+      type="text"
+      formControlName="warehouseName"
+      [class.invalid]="form.controls.warehouseName.invalid && form.controls.warehouseName.touched"
+    />
+    @if (form.controls.warehouseName.invalid && form.controls.warehouseName.touched) {
+      <span class="field-error">Warehouse name is required.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label for="warehouseDescription">Description</label>
+    <textarea id="warehouseDescription" formControlName="warehouseDescription" rows="2"></textarea>
+  </div>
+
+  <div class="items-section">
+    <div class="items-section-header">
+      <h3>Items</h3>
+      <button type="button" class="btn btn-ghost btn-sm" (click)="addItemRow()">Add item</button>
+    </div>
+
+    <div formArrayName="items" class="item-rows">
+      @for (itemGroup of items.controls; track itemGroup; let i = $index) {
+        <div class="item-row" [formGroupName]="i">
+          <div class="field item-name">
+            <label [for]="'itemName-' + i">Item name</label>
+            <input
+              [id]="'itemName-' + i"
+              type="text"
+              formControlName="itemName"
+              [class.invalid]="itemGroup.controls.itemName.invalid && itemGroup.controls.itemName.touched"
+            />
+          </div>
+          <div class="field item-description">
+            <label [for]="'itemDescription-' + i">Description</label>
+            <input [id]="'itemDescription-' + i" type="text" formControlName="itemDescription" />
+          </div>
+          <div class="field item-quantity">
+            <label [for]="'quantity-' + i">Quantity</label>
+            <input
+              [id]="'quantity-' + i"
+              type="number"
+              min="0"
+              formControlName="quantity"
+              [class.invalid]="itemGroup.controls.quantity.invalid && itemGroup.controls.quantity.touched"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-ghost btn-sm remove-item"
+            (click)="removeItemRow(i)"
+            [disabled]="items.length === 1"
+            title="Remove item"
+          >
+            Remove
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-accent" [disabled]="submitting()">
+      {{ submitting() ? 'Saving…' : 'Save warehouse' }}
+    </button>
+  </div>
+</form>

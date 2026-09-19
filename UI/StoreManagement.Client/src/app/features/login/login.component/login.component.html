@@ -1,0 +1,44 @@
+<div class="login-page">
+    <div class="login-card card">
+        <div class="crate-tag">SM</div>
+        <h1>Store Management</h1>
+        <p class="subtitle">Sign in to open today's warehouse ledger.</p>
+
+
+        @if(errorMessage()){
+            <div class="banner banner-error" role="alert">{{ errorMessage() }}</div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <div class="field">
+                <label for="userName">User name</label>
+                <input 
+                id="userName" 
+                type="text" 
+                formControlName="userName" 
+                autocomplete="username" 
+                [class.invalid] = "form.controls.userName.invalid && form.controls.userName.touched">
+                @if (form.controls.userName.invalid && form.controls.userName.touched) {
+                    <span class="field-error">User name is required.</span>
+                }
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    formControlName="password"
+                    autocomplete="current-password"
+                    [class.invalid]="form.controls.password.invalid && form.controls.password.touched">
+                    @if (form.controls.password.invalid && form.controls.password.touched) {
+                        <span class="field-error">Password is required.</span>
+                    }
+            </div>
+
+            <button type="submit" class="btn btn-accent login-submit" [disabled]="submitting()">
+                {{ submitting() ? 'Signing in...' : 'Sign in'}}
+            </button>
+        </form>
+    </div>
+</div>

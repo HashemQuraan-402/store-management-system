@@ -12,6 +12,20 @@ A role-based full-stack system for managing warehouses, inventory items, supply 
 - Angular forms, route guards, interceptors, and unit tests
 - Runtime configuration for all seed passwords and signing secrets
 
+## Screenshots
+
+### Warehouse inventory
+
+![Warehouse inventory with item quantities](docs/screenshots/warehouse-inventory.png)
+
+### Supply-document workflow
+
+![Manager supply-document workflow](docs/screenshots/supply-workflow.png)
+
+### Employee request tracking
+
+![Employee supply requests and statuses](docs/screenshots/employee-requests.png)
+
 ## Technology
 
 - ASP.NET Core 10 Web API

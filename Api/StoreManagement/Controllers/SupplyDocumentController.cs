@@ -133,10 +133,10 @@ namespace StoreManagement.Controllers
                     SupplyDocumentId = document.SupplyDocumentId,
                     SupplyDocumentName = document.SupplyDocumentName,
                     supplyDocumentSubject = document.SupplyDocumentSubject,
-                    CreatedByName = document.CreatedBy!.UserFullName,
+                    CreatedByName = currentUser!.UserFullName,
                     createdDate = document.CreatedDateAndTime,
-                    WarehouseName = document.Warehouse!.WarehouseName,
-                    ItemName = document.Item!.ItemName,
+                    WarehouseName = item.Warehouse!.WarehouseName,
+                    ItemName = item.ItemName,
                     status = document.documentStatus.ToString()
                 });
 

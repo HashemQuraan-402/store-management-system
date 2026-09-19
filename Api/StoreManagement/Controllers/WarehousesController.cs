@@ -148,7 +148,7 @@ namespace StoreManagement.Controllers
                 WarehouseId = warehosue.WarehouseId,
                 WarehouseName= warehosue.WarehouseName,
                 WarehouseDescription = warehosue.WarehouseDescription,
-                CreatedByName = warehosue.CreatedBy!.UserFullName,
+                CreatedByName = currentUser!.UserFullName,
                 CreatedDateAndTime= warehosue.CreatedDateAndTime,
                 ItemsCount = warehosue.Items.Count,
             };

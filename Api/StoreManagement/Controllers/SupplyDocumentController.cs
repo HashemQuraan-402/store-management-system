@@ -69,11 +69,21 @@ namespace StoreManagement.Controllers
         
         public async Task<ActionResult<SupplyDocumentListDto>> GetSupplyDocumentById(int id)
         {
-            var document = await dbContext.SupplyDocuments
+            var documentQuery = dbContext.SupplyDocuments
                 .Include(s => s.CreatedBy)
                 .Include(s => s.Warehouse)
                 .Include(s => s.Item)
-                .FirstOrDefaultAsync(s => s.SupplyDocumentId == id && s.CreatedById == currentUserID);
+                .AsQueryable();
+
+            documentQuery = IsMangaer
+                ? documentQuery.Where(s =>
+                    s.SupplyDocumentId == id &&
+                    s.Warehouse!.CreatedById == currentUserID)
+                : documentQuery.Where(s =>
+                    s.SupplyDocumentId == id &&
+                    s.CreatedById == currentUserID);
+
+            var document = await documentQuery.FirstOrDefaultAsync();
 
             if( document is null)
             {
@@ -187,7 +197,10 @@ namespace StoreManagement.Controllers
         private async Task<IActionResult> SetStatus(int id, DocumentStatus status)
         {
             var document = await dbContext.SupplyDocuments
-                .FirstOrDefaultAsync(s => s.SupplyDocumentId == id);
+                .Include(s => s.Warehouse)
+                .FirstOrDefaultAsync(s =>
+                    s.SupplyDocumentId == id &&
+                    s.Warehouse!.CreatedById == currentUserID);
 
             if (document is null)
             {

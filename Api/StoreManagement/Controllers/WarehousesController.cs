@@ -63,7 +63,7 @@ namespace StoreManagement.Controllers
             var warehouse = await dbContext.Warehouses
                                             .Include(w => w.CreatedBy)
                                             .Include(w => w.Items)
-                                            .Where(w => w.WarehouseId == id)
+                                            .Where(w => w.WarehouseId == id && w.CreatedById == CurrentUserId)
                                             .Select(w => new WarehouseListDto
                                             {
                                                 WarehouseId = w.WarehouseId,
@@ -87,7 +87,9 @@ namespace StoreManagement.Controllers
             // this way is better than from the comented one because it loads items list data
             var warehouse = await dbContext.Warehouses
                                             .Include(w => w.Items)
-                                            .FirstOrDefaultAsync(w => w.WarehouseId == id);
+                                            .FirstOrDefaultAsync(w =>
+                                                w.WarehouseId == id &&
+                                                w.CreatedById == CurrentUserId);
             // var warehouse = await dbContext.Warehouses.FirstOrDefaultAsync(w => w.WarehouseId == id);
             if (warehouse is null)
             {
